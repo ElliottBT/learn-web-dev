@@ -1,115 +1,59 @@
-// Серверный API для Vite.
-//
-// Работает как плагин Vite: перехватывает запросы к /api/* и отдаёт
-// JSON. Всё остальное пропускает дальше — чтобы Vite отдавал HTML,
-// CSS, JS и картинки.
-//
-// Когда появится настоящий backend на Python — этот файл исчезнет,
-// а клиент продолжит обращаться к тем же URL (/api/...).
-import { database } from "./database.js";
+import { TODAY, WEEKDAY_SLOTS, WEEKEND_SLOTS } from './database.js';
 
-// Задержка ответа, имитирует сеть.
-// 0    — отвечать мгновенно (удобно при разработке)
-// 500  — полсекунды (видно «Загрузка…»)
-// 1500 — медленно
-const DELAY_MS = 500;
+const DELAY_MS = 700;
 
-// Промис-обёртка для setTimeout — чтобы использовать await.
-function delay(ms) {
+function wait(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-// Отправка JSON-ответа с нужным статусом и CORS-заголовками.
-function sendJson(res, status, data) {
-  res.statusCode = status;
-  res.setHeader("Content-Type", "application/json; charset=utf-8");
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+function sendJson(res, data) {
+  res.setHeader('Content-Type', 'application/json');
   res.end(JSON.stringify(data));
 }
 
-export default function apiMiddleware() {
+function sendError(res, status) {
+  res.statusCode = status;
+  res.setHeader('Content-Type', 'application/json');
+  res.end(JSON.stringify({ error: 'Internal server error' }));
+}
+
+export default function mockBookingServer() {
   return {
-    name: "api-middleware",
-    configureServer(server) {
-      console.log("API middleware загружен");
+    name: 'mock-booking-server',
+    configureServer(viteServer) {
+      viteServer.middlewares.use((req, res, next) => {
+        const url = new URL(req.url, 'http://localhost');
 
-      server.middlewares.use(async (req, res, next) => {
-        // Не /api/* — пропускаем дальше, пусть Vite обрабатывает.
-        if (!req.url.startsWith("/api/")) {
-          return next();
-        }
-
-        // CORS-preflight (OPTIONS).
-        // Браузер сначала спрашивает разрешение, и только потом
-        // шлёт настоящий запрос.
-        if (req.method === "OPTIONS") {
-          res.setHeader("Access-Control-Allow-Origin", "*");
-          res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-          res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-          res.statusCode = 204;
-          res.end();
+        if (url.pathname === '/api/booking/today') {
+          wait(DELAY_MS).then(() => sendJson(res, TODAY));
           return;
         }
 
-        // ------------------------------------------------------------------
-        // GET /api/booking/today
-        //
-        // «Сегодня» по мнению сервера.
-        // Формат: { day, month, year }. Месяц — 0-индексный.
-        // ------------------------------------------------------------------
-        if (req.method === "GET" && req.url === "/api/booking/today") {
-          await delay(DELAY_MS);
-          return sendJson(res, 200, database.today);
-        }
+        if (url.pathname === '/api/slots') {
+          const day = Number(url.searchParams.get('day'));
+          const month = Number(url.searchParams.get('month'));
+          const year = Number(url.searchParams.get('year'));
 
-        // ------------------------------------------------------------------
-        // GET /api/slots?day=&month=&year=
-        //
-        // Слоты на указанную дату.
-        // day   — число месяца (1–31).
-        // month — месяц, 0-индексный (0 = январь, 9 = октябрь).
-        // year  — год (2026).
-        //
-        // Возвращаем объект с двумя полями:
-        //   date  — та же дата, что пришла в запросе.
-        //           Нужна клиенту, чтобы понять, к какому дню
-        //           относятся слоты. Если пользователь быстро
-        //           кликает по дням, ответы могут прийти
-        //           не в том порядке — по этому полю клиент
-        //           поймёт, какой из них актуальный.
-        //   slots — массив слотов [{ time, available }].
-        // ------------------------------------------------------------------
-        const slotsMatch = req.url.match(/^\/api\/slots/);
-        if (req.method === "GET" && slotsMatch) {
-          await delay(DELAY_MS);
-          const url = new URL(req.url, "http://localhost");
-          const day = parseInt(url.searchParams.get("day"));
-          const month = parseInt(url.searchParams.get("month"));
-          const year = parseInt(url.searchParams.get("year"));
+          const bad =
+            !Number.isInteger(day) || day < 1 || day > 31 ||
+            !Number.isInteger(month) || month < 0 || month > 11 ||
+            !Number.isInteger(year);
 
-          // Проверяем, что дата пришла полностью.
-          if (isNaN(day) || isNaN(month) || isNaN(year)) {
-            return sendJson(res, 400, {
-              error: "Нужны параметры day, month, year",
-            });
+          if (bad) {
+            wait(DELAY_MS).then(() => sendError(res, 500));
+            return;
           }
 
-          // Имитация: чётный день — один набор, нечётный — другой.
-          // Клиент этой логики не видит.
-          const isEven = day % 2 === 0;
-          const slots = isEven ? database.slotsEvenDay : database.slotsOddDay;
-
-          return sendJson(res, 200, {
-            date: { day, month, year },
-            slots,
+          wait(DELAY_MS).then(() => {
+            const weekday = new Date(year, month, day).getDay();
+            const slots = weekday === 0 || weekday === 6 ? WEEKEND_SLOTS : WEEKDAY_SLOTS;
+            sendJson(res, { date: { day, month, year }, slots });
           });
+          return;
         }
 
-        // Всё остальное — 404.
-        return sendJson(res, 404, { error: `Не найдено: ${req.url}` });
+        next();
       });
-    },
+    }
   };
 }

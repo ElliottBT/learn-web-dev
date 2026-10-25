@@ -1,13 +1,856 @@
-/* Стили страницы.
-   Пишите здесь. */
 
-* {
-  margin: 0;
-  padding: 0;
+:root {
+  --color-bg: #f5f0e8;          /* фон страницы */
+  --color-surface: #fffcf7;     /* карточки, шапка */
+  --color-ink: #242522;         /* основной тёмный */
+  --color-cream: #f5f0e8;       /* светлый текст на тёмном */
+  --color-copper: #a75f3c;      /* медный акцент */
+  --color-copper-dark: #8c4e30; /* медный для hover */
+  --color-copper-light: #c98560;/* медный для hover на тёмном */
+  --color-border: #ded5c8;      /* светлые границы */
+  --color-muted: #777168;       /* приглушённый текст */
+  --color-faint: #bbb2a6;       /* бледный текст */
+  --color-dark-border: #494942; /* границы на тёмном */
+
+  --font-serif: "PT Serif", Georgia, "Times New Roman", serif;
+  --font-sans: "Inter", "Segoe UI", Arial, sans-serif;
+}
+
+/* ---------- База ---------- */
+
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
+.container {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding-left: 80px;
+  padding-right: 80px;
+}
+
 body {
-  min-height: 100vh;
-  font-family: sans-serif;
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  color: var(--color-ink);
+  background: var(--color-bg);
+}
+
+h1, h2, p {
+  margin: 0;
+}
+
+ul, ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  display: block;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--color-copper);
+  outline-offset: 2px;
+}
+
+/* ---------- Шапка ---------- */
+
+.site-header {
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.site-header__inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 32px;
+  min-height: 100px;
+  padding-top: 16px;
+  padding-bottom: 16px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  cursor: pointer;
+}
+
+.logo__mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--color-copper);
+  border-radius: 50%;
+  color: var(--color-copper);
+  font-family: var(--font-serif);
+  font-size: 25px;
+  line-height: 1;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.logo:hover .logo__mark {
+  background: var(--color-copper);
+  color: var(--color-surface);
+}
+
+.logo__text {
+  display: flex;
+  flex-direction: column;
+}
+
+.logo__title {
+  font-family: var(--font-serif);
+  font-size: 26px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--color-ink);
+}
+
+.logo__subtitle {
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.site-nav__list {
+  display: flex;
+  gap: 28px;
+}
+
+.site-nav__link {
+  font-size: 14px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.site-nav__link:hover {
+  color: var(--color-copper);
+}
+
+.header-contacts {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 3px;
+}
+
+.header-contacts__phone {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 21px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.header-contacts__phone:hover {
+  color: var(--color-copper);
+}
+
+.header-contacts__address {
+  font-size: 11px;
+  line-height: 16.5px;
+  color: var(--color-muted);
+}
+
+/* ---------- Степпер ---------- */
+
+.stepper {
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.stepper__inner {
+  padding-top: 24px;
+  padding-bottom: 24px;
+}
+
+.stepper__list {
+  display: flex;
+  gap: 20px;
+}
+
+.step {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.step__head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.step__marker {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  font-size: 12px;
+  background: var(--color-bg);
+  color: var(--color-muted);
+}
+
+.step__label {
+  font-size: 14px;
+  color: var(--color-muted);
+}
+
+.step__line {
+  height: 2px;
+  background: var(--color-border);
+}
+
+.step--done .step__marker {
+  background: var(--color-ink);
+  color: var(--color-surface);
+}
+
+.step--done .step__label {
+  color: var(--color-ink);
+}
+
+.step--done .step__line {
+  background: var(--color-ink);
+}
+
+.step--current .step__marker {
+  background: var(--color-copper);
+  color: var(--color-surface);
+}
+
+.step--current .step__label {
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+.step--current .step__line {
+  background: var(--color-copper);
+}
+
+/* ---------- Мейн ---------- */
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  padding-top: 36px;
+  padding-bottom: 54px;
+}
+
+.page__head {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.page__head-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.back-link {
+  font-size: 13px;
+  line-height: 19.5px;
+  color: var(--color-muted);
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.back-link:hover {
+  color: var(--color-copper);
+}
+
+.page__step-hint {
+  font-size: 11px;
+  line-height: 16.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-copper);
+}
+
+.page__title {
+  font-family: var(--font-serif);
+  font-size: 46px;
+  font-weight: 400;
+  line-height: 55px;
+  color: var(--color-ink);
+}
+
+.page__subtitle {
+  font-size: 15px;
+  line-height: 22.5px;
+  color: var(--color-muted);
+}
+
+/* ---------- Запись ---------- */
+
+.booking {
+  display: flex;
+  align-items: flex-start;
+  gap: 28px;
+}
+
+.booking__main {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.booking__panels {
+  display: flex;
+  align-items: stretch;
+  gap: 24px;
+}
+
+.card {
+  padding: 24px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+}
+
+.card__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card__title {
+  font-family: var(--font-serif);
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 36px;
+  color: var(--color-ink);
+}
+
+.card__note {
+  font-size: 11px;
+  line-height: 16.5px;
+  color: var(--color-muted);
+}
+
+/* ---------- Календарь ---------- */
+
+.calendar {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.calendar__nav {
+  display: flex;
+  gap: 8px;
+}
+
+.icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  color: var(--color-ink);
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+
+.icon-btn:hover {
+  color: var(--color-copper);
+  border-color: var(--color-copper);
+  box-shadow: 0 2px 8px rgba(167, 95, 60, 0.18);
+}
+
+.calendar__weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+}
+
+.calendar__weekday {
+  font-size: 12px;
+  text-align: center;
+  color: var(--color-muted);
+}
+
+.calendar__grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+}
+
+.calendar__day {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 44px;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.calendar__day--muted {
+  color: var(--color-faint);
+  cursor: default;
+}
+
+.calendar__day--free {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  color: var(--color-ink);
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s, box-shadow 0.15s;
+}
+
+.calendar__day--free:hover {
+  color: var(--color-copper);
+  border-color: var(--color-copper);
+  box-shadow: 0 2px 10px rgba(167, 95, 60, 0.15);
+}
+
+.calendar__day--selected {
+  background: var(--color-copper);
+  border: 1px solid var(--color-copper);
+  font-weight: 600;
+  color: var(--color-surface);
+  cursor: pointer;
+  transition: background-color 0.15s, border-color 0.15s;
+}
+
+.calendar__day--selected:hover {
+  background: var(--color-copper-dark);
+  border-color: var(--color-copper-dark);
+}
+
+/* ---------- Слоты времени ---------- */
+
+.slots {
+  flex-shrink: 0;
+  width: 380px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.slots__head {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.slots__subtitle {
+  font-size: 13px;
+  line-height: 19.5px;
+  color: var(--color-muted);
+}
+
+.slots__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  height: 54px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s, background-color 0.15s;
+}
+
+.slot__time {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.slot__state {
+  font-size: 10px;
+}
+
+.slot--free {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  color: var(--color-ink);
+}
+
+.slot--free .slot__state {
+  color: var(--color-muted);
+}
+
+.slot--free:hover {
+  border-color: var(--color-copper);
+  box-shadow: 0 3px 12px rgba(167, 95, 60, 0.18);
+}
+
+.slot--free:hover .slot__time {
+  color: var(--color-copper);
+}
+
+.slot--busy {
+  background: var(--color-bg);
+  border: 1px solid var(--color-bg);
+  color: var(--color-muted);
+  cursor: not-allowed;
+}
+
+.slot--busy .slot__state {
+  color: var(--color-muted);
+}
+
+.slot--selected {
+  background: var(--color-copper);
+  border: 1px solid var(--color-copper);
+  color: var(--color-surface);
+}
+
+.slot--selected:hover {
+  background: var(--color-copper-dark);
+  border-color: var(--color-copper-dark);
+}
+
+/* ---------- Действия под панелями ---------- */
+
+.booking__actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.booking__summary {
+  font-size: 14px;
+  line-height: 21px;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 50px;
+  padding: 0 24px;
+  border-radius: 4px;
+  background: var(--color-copper);
+  color: var(--color-surface);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+
+.btn-primary:hover {
+  background: var(--color-copper-dark);
+  box-shadow: 0 6px 16px rgba(167, 95, 60, 0.35);
+  transform: translateY(-1px);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 3px 8px rgba(167, 95, 60, 0.3);
+}
+
+/* ---------- Карточка «Ваша запись» ---------- */
+
+.summary-card {
+  flex-shrink: 0;
+  width: 330px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  padding: 28px;
+  border-radius: 8px;
+  background: var(--color-ink);
+  color: var(--color-cream);
+}
+
+.summary-card__label {
+  font-size: 11px;
+  line-height: 16.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-faint);
+}
+
+.summary-card__master {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.summary-card__photo {
+  width: 64px;
+  height: 64px;
+  border-radius: 4px;
+  object-fit: cover;
+}
+
+.summary-card__master-info {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.summary-card__master-name {
+  font-family: var(--font-serif);
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 36px;
+  color: var(--color-cream);
+}
+
+.summary-card__master-role {
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--color-faint);
+}
+
+.summary-card__divider {
+  height: 1px;
+  margin: 0;
+  border: none;
+  background: var(--color-dark-border);
+}
+
+.summary-card__block {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.summary-card__service {
+  font-size: 18px;
+  line-height: 27px;
+  color: var(--color-cream);
+}
+
+.summary-card__service-note {
+  font-size: 13px;
+  line-height: 19.5px;
+  color: var(--color-faint);
+}
+
+.summary-card__date {
+  font-size: 17px;
+  line-height: 25.5px;
+  color: var(--color-cream);
+}
+
+.summary-card__time {
+  font-size: 14px;
+  line-height: 21px;
+  color: var(--color-cream);
+}
+
+.summary-card__total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 18px;
+  border-top: 1px solid var(--color-dark-border);
+}
+
+.summary-card__total-label {
+  font-size: 14px;
+  line-height: 21px;
+  color: var(--color-faint);
+}
+
+.summary-card__price {
+  font-family: var(--font-serif);
+  font-size: 30px;
+  line-height: 45px;
+  color: var(--color-cream);
+}
+
+.summary-card__note {
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--color-faint);
+}
+
+/* ---------- Подвал ---------- */
+
+.site-footer {
+  background: var(--color-ink);
+}
+
+.site-footer__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+
+.footer__columns {
+  display: flex;
+  align-items: flex-start;
+  gap: 80px;
+}
+
+.footer__brand {
+  width: 440px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.footer__tagline {
+  font-size: 14px;
+  line-height: 21px;
+  color: var(--color-faint);
+}
+
+.logo--light .logo__title {
+  color: var(--color-cream);
+}
+
+.logo--light .logo__subtitle {
+  color: var(--color-faint);
+}
+
+.footer__column {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.footer__column--contacts {
+  flex: 1 1 0;
+}
+
+.footer__column--hours {
+  width: 260px;
+}
+
+.footer__heading {
+  font-size: 11px;
+  line-height: 16.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-faint);
+}
+
+.footer__text {
+  font-size: 14px;
+  line-height: 21px;
+  color: var(--color-cream);
+}
+
+.footer__phone {
+  font-size: 18px;
+  line-height: 27px;
+  color: var(--color-cream);
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.footer__phone:hover {
+  color: var(--color-copper-light);
+}
+
+.footer__bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  padding-top: 22px;
+  border-top: 1px solid var(--color-dark-border);
+}
+
+.footer__copy {
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--color-faint);
+}
+
+.footer__privacy {
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--color-faint);
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.footer__privacy:hover {
+  color: var(--color-cream);
+}
+
+
+@media (max-width: 1180px) {
+  .container {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+
+  .booking {
+    flex-direction: column;
+  }
+
+  .summary-card {
+    width: 100%;
+  }
+
+  .booking__panels {
+    flex-direction: column;
+  }
+
+  .slots {
+    width: 100%;
+  }
+
+  .footer__columns {
+    flex-wrap: wrap;
+    gap: 40px;
+  }
 }

@@ -1,14 +1,300 @@
+
+
 <!DOCTYPE html>
 <html lang="ru">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Выбор даты и времени</title>
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <div class="page">
-      <!-- Перенесите вашу верстку. Удалите статичные данные. Подключите скрипт -->
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Рыбинский Цирюльник — выбор даты и времени</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=PT+Serif:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container site-header__inner">
+    <a class="logo" href="#">
+      <span class="logo__mark" aria-hidden="true">РЦ</span>
+      <span class="logo__text">
+        <span class="logo__title">Рыбинский Цирюльник</span>
+        <span class="logo__subtitle">Барбершоп · Рыбинск</span>
+      </span>
+    </a>
+
+    <nav class="site-nav" aria-label="Основное меню">
+      <ul class="site-nav__list">
+        <li class="site-nav__item"><a class="site-nav__link" href="#">Услуги</a></li>
+        <li class="site-nav__item"><a class="site-nav__link" href="#">Галерея</a></li>
+        <li class="site-nav__item"><a class="site-nav__link" href="#">Команда</a></li>
+        <li class="site-nav__item"><a class="site-nav__link" href="#">Отзывы</a></li>
+        <li class="site-nav__item"><a class="site-nav__link" href="#">Контакты</a></li>
+      </ul>
+    </nav>
+
+    <div class="header-contacts">
+      <a class="header-contacts__phone" href="tel:+749551234567">+7 (4955) 123-45-67</a>
+      <span class="header-contacts__address">ул. Стоялая, 15, Рыбинск</span>
     </div>
-  </body>
+    </div>
+  </header>
+
+  <nav class="stepper" aria-label="Шаги записи">
+    <div class="container stepper__inner">
+    <ol class="stepper__list">
+      <li class="step step--done">
+        <span class="step__head">
+          <span class="step__marker" aria-hidden="true">✓</span>
+          <span class="step__label">Мастер</span>
+          <span class="visually-hidden">— выполнено</span>
+        </span>
+        <span class="step__line" aria-hidden="true"></span>
+      </li>
+      <li class="step step--done">
+        <span class="step__head">
+          <span class="step__marker" aria-hidden="true">✓</span>
+          <span class="step__label">Услуга</span>
+          <span class="visually-hidden">— выполнено</span>
+        </span>
+        <span class="step__line" aria-hidden="true"></span>
+      </li>
+      <li class="step step--current" aria-current="step">
+        <span class="step__head">
+          <span class="step__marker" aria-hidden="true">3</span>
+          <span class="step__label">Дата и время</span>
+        </span>
+        <span class="step__line" aria-hidden="true"></span>
+      </li>
+      <li class="step">
+        <span class="step__head">
+          <span class="step__marker" aria-hidden="true">4</span>
+          <span class="step__label">Контакты</span>
+        </span>
+        <span class="step__line" aria-hidden="true"></span>
+      </li>
+      <li class="step">
+        <span class="step__head">
+          <span class="step__marker" aria-hidden="true">5</span>
+          <span class="step__label">Подтверждение</span>
+        </span>
+        <span class="step__line" aria-hidden="true"></span>
+      </li>
+    </ol>
+    </div>
+  </nav>
+
+  <main>
+    <div class="container page">
+    <div class="page__head">
+      <div class="page__head-row">
+        <a class="back-link" href="#">← Назад</a>
+        <span class="page__step-hint">Шаг 3 из 5</span>
+      </div>
+      <h1 class="page__title">Выберите время для себя</h1>
+      <p class="page__subtitle">Дмитрий · Комплекс стрижка + борода · 60 мин. Время указано по Москве.</p>
+    </div>
+
+    <div class="booking">
+      <section class="booking__main" aria-label="Выбор даты и времени">
+        <div class="booking__panels">
+
+          <section class="card calendar">
+            <header class="card__head">
+              <h2 class="card__title" id="calendar-title">Октябрь 2026</h2>
+              <div class="calendar__nav">
+                <button class="icon-btn" type="button" id="prev-month" aria-label="Предыдущий месяц">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+                <button class="icon-btn" type="button" id="next-month" aria-label="Следующий месяц">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <path d="M6 3L11 8L6 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+              </div>
+            </header>
+
+            <div class="calendar__weekdays" aria-hidden="true">
+              <span class="calendar__weekday">Пн</span>
+              <span class="calendar__weekday">Вт</span>
+              <span class="calendar__weekday">Ср</span>
+              <span class="calendar__weekday">Чт</span>
+              <span class="calendar__weekday">Пт</span>
+              <span class="calendar__weekday">Сб</span>
+              <span class="calendar__weekday">Вс</span>
+            </div>
+
+            <div class="calendar__grid" id="calendar-grid">
+              <span class="calendar__day calendar__day--muted">28</span>
+              <span class="calendar__day calendar__day--muted">29</span>
+              <span class="calendar__day calendar__day--muted">30</span>
+              <span class="calendar__day calendar__day--muted">1</span>
+              <span class="calendar__day calendar__day--muted">2</span>
+              <span class="calendar__day calendar__day--muted">3</span>
+              <span class="calendar__day calendar__day--muted">4</span>
+
+              <span class="calendar__day calendar__day--muted">5</span>
+              <span class="calendar__day calendar__day--muted">6</span>
+              <span class="calendar__day calendar__day--muted">7</span>
+              <span class="calendar__day calendar__day--muted">8</span>
+              <button class="calendar__day calendar__day--free" type="button">9</button>
+              <button class="calendar__day calendar__day--free" type="button">10</button>
+              <button class="calendar__day calendar__day--free" type="button">11</button>
+
+              <button class="calendar__day calendar__day--selected" type="button" aria-pressed="true">12</button>
+              <button class="calendar__day calendar__day--free" type="button">13</button>
+              <button class="calendar__day calendar__day--free" type="button">14</button>
+              <button class="calendar__day calendar__day--free" type="button">15</button>
+              <button class="calendar__day calendar__day--free" type="button">16</button>
+              <button class="calendar__day calendar__day--free" type="button">17</button>
+              <button class="calendar__day calendar__day--free" type="button">18</button>
+
+              <button class="calendar__day calendar__day--free" type="button">19</button>
+              <button class="calendar__day calendar__day--free" type="button">20</button>
+              <button class="calendar__day calendar__day--free" type="button">21</button>
+              <button class="calendar__day calendar__day--free" type="button">22</button>
+              <button class="calendar__day calendar__day--free" type="button">23</button>
+              <button class="calendar__day calendar__day--free" type="button">24</button>
+              <button class="calendar__day calendar__day--free" type="button">25</button>
+
+              <button class="calendar__day calendar__day--free" type="button">26</button>
+              <button class="calendar__day calendar__day--free" type="button">27</button>
+              <button class="calendar__day calendar__day--free" type="button">28</button>
+              <button class="calendar__day calendar__day--free" type="button">29</button>
+              <button class="calendar__day calendar__day--free" type="button">30</button>
+              <button class="calendar__day calendar__day--free" type="button">31</button>
+              <span class="calendar__day calendar__day--muted">1</span>
+            </div>
+
+            <p class="card__note">Медный — выбранная дата. Бледные даты — прошедшие или другой месяц.</p>
+          </section>
+
+          <section class="card slots">
+            <div class="slots__head">
+              <h2 class="card__title" id="slots-title">12 октября, пн</h2>
+              <p class="slots__subtitle">Начало визита · услуга 60 мин</p>
+            </div>
+
+            <div class="slots__grid" id="slots-grid">
+              <button class="slot slot--free" type="button">
+                <span class="slot__time">10:00</span>
+                <span class="slot__state">Свободно</span>
+              </button>
+              <button class="slot slot--busy" type="button" disabled>
+                <span class="slot__time">11:00</span>
+                <span class="slot__state">Занято</span>
+              </button>
+              <button class="slot slot--free" type="button">
+                <span class="slot__time">12:00</span>
+                <span class="slot__state">Свободно</span>
+              </button>
+              <button class="slot slot--busy" type="button" disabled>
+                <span class="slot__time">13:00</span>
+                <span class="slot__state">Занято</span>
+              </button>
+              <button class="slot slot--selected" type="button" aria-pressed="true">
+                <span class="slot__time">14:00</span>
+                <span class="slot__state">Выбрано</span>
+              </button>
+              <button class="slot slot--free" type="button">
+                <span class="slot__time">15:00</span>
+                <span class="slot__state">Свободно</span>
+              </button>
+              <button class="slot slot--free" type="button">
+                <span class="slot__time">16:00</span>
+                <span class="slot__state">Свободно</span>
+              </button>
+              <button class="slot slot--free" type="button">
+                <span class="slot__time">17:00</span>
+                <span class="slot__state">Свободно</span>
+              </button>
+            </div>
+
+            <p class="card__note">Занятые слоты недоступны. Медный слот — ваш выбор.</p>
+          </section>
+        </div>
+
+        <div class="booking__actions">
+          <p class="booking__summary" id="booking-summary">Вы выбрали: 12 октября 2026 · 14:00–15:00</p>
+          <button class="btn-primary" type="button" id="next-step">
+            Далее
+            <svg width="17" height="17" viewBox="0 0 17 17" fill="none" aria-hidden="true">
+              <path d="M3 8.5H13.5M9.5 4.5L13.5 8.5L9.5 12.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      </section>
+
+      <aside class="summary-card" aria-label="Ваша запись">
+        <p class="summary-card__label">Ваша запись</p>
+
+        <div class="summary-card__master">
+          <img class="summary-card__photo" src="images/barber-dmitry.jpg" alt="Дмитрий, барбер" width="64" height="64">
+          <div class="summary-card__master-info">
+            <p class="summary-card__master-name">Дмитрий</p>
+            <p class="summary-card__master-role">Барбер · 5 лет опыта</p>
+          </div>
+        </div>
+
+        <hr class="summary-card__divider">
+
+        <div class="summary-card__block">
+          <p class="summary-card__service">Комплекс стрижка + борода</p>
+          <p class="summary-card__service-note">60 мин · Стрижка и оформление бороды</p>
+        </div>
+
+        <div class="summary-card__block">
+          <p class="summary-card__date" id="summary-date">12 октября 2026, понедельник</p>
+          <p class="summary-card__time" id="summary-time">14:00–15:00</p>
+        </div>
+
+        <div class="summary-card__total">
+          <span class="summary-card__total-label">Итого</span>
+          <span class="summary-card__price">2200 ₽</span>
+        </div>
+
+        <p class="summary-card__note">Оплата в салоне после услуги. Без предоплаты.</p>
+      </aside>
+    </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container site-footer__inner">
+    <div class="footer__columns">
+      <div class="footer__brand">
+        <a class="logo logo--light" href="#">
+          <span class="logo__mark" aria-hidden="true">РЦ</span>
+          <span class="logo__text">
+            <span class="logo__title">Рыбинский Цирюльник</span>
+            <span class="logo__subtitle">Барбершоп · Рыбинск</span>
+          </span>
+        </a>
+        <p class="footer__tagline">Точные стрижки, ухоженные бороды и время для себя. Мастерство, которому можно доверять.</p>
+      </div>
+
+      <div class="footer__column footer__column--contacts">
+        <p class="footer__heading">Контакты</p>
+        <p class="footer__text">ул. Стоялая, 15, Рыбинск</p>
+        <a class="footer__phone" href="tel:+749551234567">+7 (4955) 123-45-67</a>
+      </div>
+
+      <div class="footer__column footer__column--hours">
+        <p class="footer__heading">Режим работы</p>
+        <p class="footer__text">Пн–Пт 9:00–21:00</p>
+        <p class="footer__text">Сб–Вс 10:00–19:00</p>
+      </div>
+    </div>
+
+    <div class="footer__bottom">
+      <p class="footer__copy">© 2026. Все права защищены.</p>
+      <a class="footer__privacy" href="#">Политика конфиденциальности</a>
+    </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
 </html>

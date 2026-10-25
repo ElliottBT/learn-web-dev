@@ -1,57 +1,123 @@
-// App — корневой компонент приложения.
-//
-// ЗАДАНИЕ
-// --------
-// Перенесите свою страницу выбора даты и времени из нативного JS
-// на React. У вас уже есть:
-//   - готовая вёрстка (HTML);
-//   - готовые стили (CSS);
-//   - рабочий код на нативном JS (валидация дат, рендер календаря,
-//     обработчики кликов, выбор слота).
-//
-// Теперь нужно то же самое сделать в React.
-//
-// ЧТО НУЖНО СДЕЛАТЬ
-// ------------------
-// 1. Разбить страницу на компоненты. Как именно — решайте сами.
-//    Обычно выделяют: шапку, подвал, календарь, сетку слотов,
-//    нижнюю панель.
-//
-// 2. Перенести вёрстку из HTML в JSX. Стили оставить как есть,
-//    просто положить их в тот же проект (например, в src/styles/
-//    или рядом с компонентами).
-//
-// 3. Заменить нативное состояние (переменные + прямые манипуляции
-//    с DOM) на useState. Какие именно данные должны жить в состоянии —
-//    подумайте сами. Скорее всего: текущий месяц, выбранный день,
-//    выбранное время, массив слотов.
-//
-// 4. Рендер календаря и слотов делать через JSX и .map(),
-//    без innerHTML и querySelector.
-//
-// 5. Обработчики кликов — через onClick прямо в JSX,
-//    без addEventListener.
-//
-// 6. Функции для работы с датами, которые вы уже написали
-//    на нативном JS (построение сетки календаря, сравнение дат,
-//    проверка «не раньше сегодня»), можно переиспользовать.
-//    Они чистые — не зависят от React. Создайте файл
-//    src/utils/date.js и перенесите их туда.
-//
-//
-// ПОДСКАЗКА
-// ---------
-// Если что-то не работает или непонятно, как перевести нативный
-// код на React — вернитесь к лекции. Там разбирались все
-// основные приёмы: состояние, пропсы, рендер списков, колбэки.
-//
-// Ниже — пустой каркас. Здесь можно начать писать.
+import { useState } from 'react';
+import Header from './components/Header.jsx';
+import Stepper from './components/Stepper.jsx';
+import Footer from './components/Footer.jsx';
+import Calendar from './components/Calendar.jsx';
+import TimeSlots from './components/TimeSlots.jsx';
+import BookingBottomBar from './components/BookingBottomBar.jsx';
+import SummaryCard from './components/SummaryCard.jsx';
+import { TODAY, MONTHS_GENITIVE, DAYS_OF_WEEK, getWeekdayIndex } from './data/date.js';
+
+
+const SLOTS = [
+  { time: '10:00', available: true },
+  { time: '11:00', available: false },
+  { time: '12:00', available: true },
+  { time: '13:00', available: false },
+  { time: '14:00', available: true },
+  { time: '15:00', available: true },
+  { time: '16:00', available: true },
+  { time: '17:00', available: true }
+];
 
 function App() {
+  const [currentMonth, setCurrentMonth] = useState(TODAY.month);
+  const [currentYear, setCurrentYear] = useState(TODAY.year);
+  const [selectedDay, setSelectedDay] = useState({ day: 12, month: 10, year: 2026 });
+  const [selectedTime, setSelectedTime] = useState('14:00');
+  const [slots] = useState(SLOTS);
+
+  function handlePrevMonth() {
+    if (currentMonth === 1) {
+      setCurrentMonth(12);
+      setCurrentYear(currentYear - 1);
+    } else {
+      setCurrentMonth(currentMonth - 1);
+    }
+  }
+
+  function handleNextMonth() {
+    if (currentMonth === 12) {
+      setCurrentMonth(1);
+      setCurrentYear(currentYear + 1);
+    } else {
+      setCurrentMonth(currentMonth + 1);
+    }
+  }
+
+  function handleDayClick(day) {
+    setSelectedDay({ day: day, month: currentMonth, year: currentYear });
+    setSelectedTime(null);
+  }
+
+  function handleTimeSlotClick(time) {
+    setSelectedTime(time);
+  }
+
+  function handleNextStep() {
+    if (!selectedTime) {
+      alert('Выберите время визита — свободные слоты подсвечены.');
+      return;
+    }
+
+    alert(
+      'Запись подтверждена: ' +
+      DAYS_OF_WEEK[getWeekdayIndex(selectedDay.day, selectedDay.month, selectedDay.year)] + ', ' +
+      selectedDay.day + ' ' + MONTHS_GENITIVE[selectedDay.month - 1] + ' ' + selectedDay.year +
+      ', ' + selectedTime + '.'
+    );
+  }
+
   return (
-    <div>
-      {/* Начните отсюда. Например, разметьте .page, добавьте шапку,
-            основную область, подвал. */}
+    <div className="app">
+      <Header />
+      <Stepper />
+
+      <main>
+        <div className="container page">
+          <div className="page__head">
+            <div className="page__head-row">
+              <a className="back-link" href="#">← Назад</a>
+              <span className="page__step-hint">Шаг 3 из 5</span>
+            </div>
+            <h1 className="page__title">Выберите время для себя</h1>
+            <p className="page__subtitle">
+              Дмитрий · Комплекс стрижка + борода · 60 мин. Время указано по Москве.
+            </p>
+          </div>
+
+          <div className="booking">
+            <section className="booking__main" aria-label="Выбор даты и времени">
+              <div className="booking__panels">
+                <Calendar
+                  year={currentYear}
+                  month={currentMonth}
+                  selectedDay={selectedDay}
+                  onDayClick={handleDayClick}
+                  onPrevMonth={handlePrevMonth}
+                  onNextMonth={handleNextMonth}
+                />
+                <TimeSlots
+                  selectedDay={selectedDay}
+                  slots={slots}
+                  selectedTime={selectedTime}
+                  onTimeSlotClick={handleTimeSlotClick}
+                />
+              </div>
+
+              <BookingBottomBar
+                selectedDay={selectedDay}
+                selectedTime={selectedTime}
+                onNextStep={handleNextStep}
+              />
+            </section>
+
+            <SummaryCard selectedDay={selectedDay} selectedTime={selectedTime} />
+          </div>
+        </div>
+      </main>
+
+      <Footer />
     </div>
   );
 }
