@@ -855,3 +855,27 @@ button:focus-visible {
     gap: 40px;
   }
 }
+
+.btn-primary:disabled {
+  background: var(--color-faint);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.btn-primary:disabled:hover {
+  background: var(--color-faint);
+  transform: none;
+  box-shadow: none;
+}
+
+.icon-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.icon-btn:disabled:hover {
+  color: var(--color-ink);
+  border-color: var(--color-border);
+  box-shadow: none;
+}

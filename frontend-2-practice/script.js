@@ -1,4 +1,3 @@
-
 const SLOTS = [
   { time: '10:00', available: true },
   { time: '11:00', available: false },
@@ -9,7 +8,6 @@ const SLOTS = [
   { time: '16:00', available: true },
   { time: '17:00', available: true }
 ];
-
 
 const MONTHS_NOMINATIVE = [
   'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь',
@@ -27,19 +25,18 @@ const DAYS_OF_WEEK = [
 
 const DAYS_OF_WEEK_SHORT = ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс'];
 
-
+const NOW = new Date();
 const TODAY = {
-  day: 9,
-  month: 10,
-  year: 2026
+  day: NOW.getDate(),
+  month: NOW.getMonth() + 1,
+  year: NOW.getFullYear()
 };
-
 
 const state = {
   currentMonth: TODAY.month,
   currentYear: TODAY.year,
-  selectedDay: { day: 12, month: 10, year: 2026 },
-  selectedTime: '14:00',
+  selectedDay: { day: TODAY.day, month: TODAY.month, year: TODAY.year },
+  selectedTime: null,
   slots: SLOTS
 };
 
@@ -94,11 +91,35 @@ function getWeekdayIndex(day, month, year) {
   return (new Date(year, month - 1, day).getDay() + 6) % 7;
 }
 
+function isFirstAvailableDayOfMonth(month, year) {
+  if (year === TODAY.year && month === TODAY.month) {
+    return TODAY.day;
+  }
+  return 1;
+}
+
+function isSelectedDayInCurrentMonth() {
+  return (
+    state.selectedDay !== null &&
+    state.selectedDay.month === state.currentMonth &&
+    state.selectedDay.year === state.currentYear
+  );
+}
+
+function isPrevMonthUnavailable() {
+  return compareDates(
+    { day: 1, month: state.currentMonth, year: state.currentYear },
+    { day: 1, month: TODAY.month, year: TODAY.year }
+  ) <= 0;
+}
+
 function renderCalendar() {
   const title = document.querySelector('#calendar-title');
   const grid = document.querySelector('#calendar-grid');
+  const prevBtn = document.querySelector('#prev-month');
 
   title.textContent = MONTHS_NOMINATIVE[state.currentMonth - 1] + ' ' + state.currentYear;
+  prevBtn.disabled = isPrevMonthUnavailable();
 
   const weeks = buildCalendarGrid(state.currentYear, state.currentMonth - 1);
 
@@ -211,6 +232,14 @@ function renderSummary() {
     : 'время не выбрано';
 }
 
+function updateNextStepButton() {
+  const btn = document.querySelector('#next-step');
+  const dayOk =
+    state.selectedDay !== null &&
+    isDateSelectable(state.selectedDay.day, state.selectedDay.month, state.selectedDay.year, TODAY);
+  btn.disabled = !(dayOk && state.selectedTime !== null);
+}
+
 function onDayClick(event) {
   const day = Number(event.currentTarget.dataset.day);
 
@@ -225,6 +254,7 @@ function onDayClick(event) {
   renderTimeSlots();
   updateBottomBar();
   renderSummary();
+  updateNextStepButton();
 }
 
 function onTimeSlotClick(event) {
@@ -233,32 +263,57 @@ function onTimeSlotClick(event) {
   renderTimeSlots();
   updateBottomBar();
   renderSummary();
+  updateNextStepButton();
+}
+
+function changeMonth(delta) {
+  state.currentMonth += delta;
+  if (state.currentMonth < 1) {
+    state.currentMonth = 12;
+    state.currentYear -= 1;
+  }
+  if (state.currentMonth > 12) {
+    state.currentMonth = 1;
+    state.currentYear += 1;
+  }
+
+  if (!isSelectedDayInCurrentMonth()) {
+    state.selectedDay = {
+      day: isFirstAvailableDayOfMonth(state.currentMonth, state.currentYear),
+      month: state.currentMonth,
+      year: state.currentYear
+    };
+  }
+  state.selectedTime = null;
+
+  renderCalendar();
+  renderTimeSlots();
+  updateBottomBar();
+  renderSummary();
+  updateNextStepButton();
 }
 
 function setupMonthNavigation() {
   document.querySelector('#prev-month').addEventListener('click', function () {
-    state.currentMonth -= 1;
-    if (state.currentMonth < 1) {
-      state.currentMonth = 12;
-      state.currentYear -= 1;
-    }
-    renderCalendar();
+    changeMonth(-1);
   });
 
   document.querySelector('#next-month').addEventListener('click', function () {
-    state.currentMonth += 1;
-    if (state.currentMonth > 12) {
-      state.currentMonth = 1;
-      state.currentYear += 1;
-    }
-    renderCalendar();
+    changeMonth(1);
   });
 }
-
 
 function setupNextStep() {
   document.querySelector('#next-step').addEventListener('click', function () {
     const day = state.selectedDay;
+
+    const dayOk =
+      day !== null &&
+      isDateSelectable(day.day, day.month, day.year, TODAY);
+    if (!dayOk) {
+      alert('Выберите доступную дату визита в календаре.');
+      return;
+    }
 
     if (!state.selectedTime) {
       alert('Выберите время визита — свободные слоты подсвечены.');
@@ -279,6 +334,7 @@ function init() {
   renderTimeSlots();
   updateBottomBar();
   renderSummary();
+  updateNextStepButton();
   setupMonthNavigation();
   setupNextStep();
 }
