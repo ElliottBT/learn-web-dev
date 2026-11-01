@@ -6,48 +6,57 @@ import Calendar from './components/Calendar.jsx';
 import TimeSlots from './components/TimeSlots.jsx';
 import BookingBottomBar from './components/BookingBottomBar.jsx';
 import SummaryCard from './components/SummaryCard.jsx';
-import { TODAY, MONTHS_GENITIVE, DAYS_OF_WEEK, getWeekdayIndex } from './data/date.js';
-
-
-const SLOTS = [
-  { time: '10:00', available: true },
-  { time: '11:00', available: false },
-  { time: '12:00', available: true },
-  { time: '13:00', available: false },
-  { time: '14:00', available: true },
-  { time: '15:00', available: true },
-  { time: '16:00', available: true },
-  { time: '17:00', available: true }
-];
+import {
+  TODAY,
+  compareDates,
+  MONTHS_GENITIVE,
+  DAYS_OF_WEEK,
+  getWeekdayIndex,
+  getSlotsForDate,
+  firstAvailableDayOfMonth
+} from './data/date.js';
 
 function App() {
   const [currentMonth, setCurrentMonth] = useState(TODAY.month);
   const [currentYear, setCurrentYear] = useState(TODAY.year);
-  const [selectedDay, setSelectedDay] = useState({ day: 12, month: 10, year: 2026 });
-  const [selectedTime, setSelectedTime] = useState('14:00');
-  const [slots] = useState(SLOTS);
+  const [selectedDay, setSelectedDay] = useState({ day: TODAY.day, month: TODAY.month, year: TODAY.year });
+  const [selectedTime, setSelectedTime] = useState(null);
+  const [slots, setSlots] = useState(getSlotsForDate(TODAY.day, TODAY.month, TODAY.year));
+
+  function changeMonth(delta) {
+    let month = currentMonth + delta;
+    let year = currentYear;
+    if (month < 1) {
+      month = 12;
+      year = year - 1;
+    }
+    if (month > 12) {
+      month = 1;
+      year = year + 1;
+    }
+
+    setCurrentMonth(month);
+    setCurrentYear(year);
+
+    const day = firstAvailableDayOfMonth(month, year);
+    const nextDay = day === null ? null : { day: day, month: month, year: year };
+    setSelectedDay(nextDay);
+    setSelectedTime(null);
+    setSlots(nextDay === null ? [] : getSlotsForDate(nextDay.day, month, year));
+  }
 
   function handlePrevMonth() {
-    if (currentMonth === 1) {
-      setCurrentMonth(12);
-      setCurrentYear(currentYear - 1);
-    } else {
-      setCurrentMonth(currentMonth - 1);
-    }
+    changeMonth(-1);
   }
 
   function handleNextMonth() {
-    if (currentMonth === 12) {
-      setCurrentMonth(1);
-      setCurrentYear(currentYear + 1);
-    } else {
-      setCurrentMonth(currentMonth + 1);
-    }
+    changeMonth(1);
   }
 
   function handleDayClick(day) {
     setSelectedDay({ day: day, month: currentMonth, year: currentYear });
     setSelectedTime(null);
+    setSlots(getSlotsForDate(day, currentMonth, currentYear));
   }
 
   function handleTimeSlotClick(time) {
@@ -55,6 +64,14 @@ function App() {
   }
 
   function handleNextStep() {
+    const dayOk =
+      selectedDay !== null &&
+      compareDates(selectedDay, TODAY) >= 0;
+    if (!dayOk) {
+      alert('Выберите доступную дату визита в календаре.');
+      return;
+    }
+
     if (!selectedTime) {
       alert('Выберите время визита — свободные слоты подсвечены.');
       return;

@@ -1,8 +1,49 @@
+
+const NOW = new Date();
+
 export const TODAY = {
-  day: 9,
-  month: 10,
-  year: 2026
+  day: NOW.getDate(),
+  month: NOW.getMonth() + 1,
+  year: NOW.getFullYear()
 };
+
+const WEEKDAY_SLOTS = [
+  { time: '10:00', available: true },
+  { time: '11:00', available: false },
+  { time: '12:00', available: true },
+  { time: '13:00', available: false },
+  { time: '14:00', available: true },
+  { time: '15:00', available: true },
+  { time: '16:00', available: true },
+  { time: '17:00', available: true }
+];
+
+const WEEKEND_SLOTS = [
+  { time: '10:00', available: false },
+  { time: '11:00', available: true },
+  { time: '12:00', available: true },
+  { time: '13:00', available: true },
+  { time: '14:00', available: false },
+  { time: '15:00', available: true },
+  { time: '16:00', available: false },
+  { time: '17:00', available: true }
+];
+
+export function getSlotsForDate(day, month, year) {
+  const weekday = new Date(year, month - 1, day).getDay();
+  const source = weekday === 0 || weekday === 6 ? WEEKEND_SLOTS : WEEKDAY_SLOTS;
+  return source.map((slot) => ({ time: slot.time, available: slot.available }));
+}
+
+export function firstAvailableDayOfMonth(month, year) {
+  if (year < TODAY.year || (year === TODAY.year && month < TODAY.month)) {
+    return null;
+  }
+  if (year === TODAY.year && month === TODAY.month) {
+    return TODAY.day;
+  }
+  return 1;
+}
 
 export const MONTHS_NOMINATIVE = [
   'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь',

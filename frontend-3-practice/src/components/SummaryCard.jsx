@@ -2,9 +2,10 @@ import photo from '../assets/barber-dmitry.jpg';
 import { MONTHS_GENITIVE, DAYS_OF_WEEK, getWeekdayIndex, getEndTime } from '../data/date.js';
 
 function SummaryCard({ selectedDay, selectedTime }) {
-  const dateText =
-    selectedDay.day + ' ' + MONTHS_GENITIVE[selectedDay.month - 1] + ' ' + selectedDay.year + ', ' +
-    DAYS_OF_WEEK[getWeekdayIndex(selectedDay.day, selectedDay.month, selectedDay.year)].toLowerCase();
+  const dateText = selectedDay === null
+    ? 'дата не выбрана'
+    : selectedDay.day + ' ' + MONTHS_GENITIVE[selectedDay.month - 1] + ' ' + selectedDay.year + ', ' +
+      DAYS_OF_WEEK[getWeekdayIndex(selectedDay.day, selectedDay.month, selectedDay.year)].toLowerCase();
 
   const timeText = selectedTime
     ? selectedTime + '–' + getEndTime(selectedTime)

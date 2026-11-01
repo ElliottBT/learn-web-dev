@@ -1,6 +1,19 @@
 import { MONTHS_GENITIVE, DAYS_OF_WEEK_SHORT, getWeekdayIndex } from '../data/date.js';
 
 function TimeSlots({ selectedDay, slots, selectedTime, onTimeSlotClick }) {
+  if (selectedDay === null) {
+    return (
+      <section className="card slots">
+        <div className="slots__head">
+          <h2 className="card__title">Дата не выбрана</h2>
+          <p className="slots__subtitle">Начало визита · услуга 60 мин</p>
+        </div>
+        <p className="slots__empty">В показанном месяце нет доступных дней</p>
+        <p className="card__note">Занятые слоты недоступны. Медный слот — ваш выбор.</p>
+      </section>
+    );
+  }
+
   const title =
     selectedDay.day + ' ' + MONTHS_GENITIVE[selectedDay.month - 1] + ', ' +
     DAYS_OF_WEEK_SHORT[getWeekdayIndex(selectedDay.day, selectedDay.month, selectedDay.year)];
